@@ -1,0 +1,12 @@
+{
+    "appkey": "",
+    "appsecret": "",
+    "template": {
+        "id": 3036121,
+        "name": "面试通过通知",
+        "update-at": "2016-12-24 12:54:21",
+        "content": "%s 同学...blablabla，恭喜一审通过，二轮面试时间和地点为 %s，如能参加请回复收到，否则请回复空闲时间段，谢谢。",
+        "status": "pass"
+    },
+    "var-count": 2
+}
