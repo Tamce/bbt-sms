@@ -6,12 +6,16 @@ import xlrd
 import random
 from time import time
 from hashlib import sha1
-from urllib import urlencode
+from urllib.parse import urlencode
 from httplib2 import Http
 
-global queue = []
-global mobiles = []
-global http = Http()
+global queue
+global mobiles
+global http
+
+queue = []
+mobiles = []
+http = Http()
 
 os.chdir(os.path.split(os.path.realpath(__file__))[0])
 f = open('config.json', encoding="utf-8")
@@ -38,9 +42,8 @@ def read() :
     table = book.sheet_by_index(0)
     for i in range(table.nrows) :
         # 第一列留作电话号码列，从第二列开始作为变量列读入
+        mobiles.append(table.row_values(i)[0])
         queue.append(table.row_values(i)[1 : 1 + config['var-count']])
-    # 读入电话号码列
-    mobiles = table.col_values(0)
     # 读取完毕，所有信息读入到 queue 中
     book.release_resources()
     pass
@@ -51,18 +54,17 @@ def check() :
     print('共 %s 条记录，使用的模板：' % len(queue))
     print(config['template']['content'])
     print('------------------------------')
-    for i in queue :
-        print(mobiles[i] + '\t'.join(i))
+    for i in range(len(queue)) :
+        print(str(mobiles[i]) + '\t' + '\t'.join(queue[i]))
     pass
 
 
 # 获取调用接口所需要的请求头
-def getHeader()
+def getHeader() :
     random.seed()
-    random.randint(1000000)
-    curTime = str(int(time.time()))
+    curTime = str(int(time()))
     nonce = ''.join(random.choices('0123456789', k = 32))
-    checkSum = sha1(config['appsecret'] + nonce + curTime).hexdigest()
+    checkSum = sha1((config['appsecret'] + nonce + curTime).encode()).hexdigest()
     return {
         'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8',
         'AppKey': config['appkey'],
@@ -74,7 +76,7 @@ def getHeader()
 # 发送模板信息的接口调用
 def send() :
     # https://api.netease.im/sms/sendtemplate.action
-    resp, body = http.request('http://localhost/',
+    resp, body = http.request('http://127.0.0.1/',
         headers = getHeader(),
         body = urlencode({
             'templateid': config['template']['id'],
@@ -82,6 +84,11 @@ def send() :
             "params": json.dumps(queue)
         })
     )
+    print('\n------DEBUG------')
+    print(resp)
+    print('----------------')
+    print(body)
+    print('----------------')
     pass
 
 
@@ -103,7 +110,7 @@ def action() :
     'q > 退出程序\n'
     '-----------'
     )
-    choice = input('请选择 >')
+    choice = input('请选择 > ')
     try:
         {
             'a': read,
