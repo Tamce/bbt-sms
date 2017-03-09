@@ -1,6 +1,8 @@
 {
     "appkey": "",
     "appsecret": "",
+    "excel-file": "1.xlsx",
+    "log-file": "log.log",
     "template": {
         "id": 3036121,
         "name": "面试通过通知",
