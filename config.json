@@ -13,6 +13,6 @@
     "var-count": 2,
     "log": {
         "disabled": false,
-        "level": 4
+        "level": 3
     }
 }

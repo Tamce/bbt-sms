@@ -113,6 +113,7 @@ def sendSingle(mobile, params) :
         'params': json.dumps(params)
     })
     log(pure = str(header) + '\n' + body + '\n--------', level = 4)
+    log(pure = body, level = 3)
     # https://api.netease.im/sms/sendtemplate.action
     resp, body = http.request('https://api.netease.im/sms/sendtemplate.action',
         method='POST',
@@ -120,14 +121,15 @@ def sendSingle(mobile, params) :
         body = body
     )
     result.append([{"mobile": mobile, "params": params}, json.loads(body)])
-    log('Request complete, response:', level = 4)
+    log('Request complete, response:', level = 3)
     log(pure = str(resp) + '\n' + str(body) + '\n--------', level = 4)
-    log(pure = body, level = 3)
-    print('%s - %s \t-> ' % (mobile, ','.join(params), body.decode()))
+    log(pure = body.decode(), level = 3)
+    print('%s - %s \t-> %s' % (mobile, ','.join(params), body.decode()))
 
 
 def send() :
     log('Start sending message for each one...', level = 1)
+    print('Sending Message for each one...')
     for i in range(len(mobiles)) :
         sendSingle(mobiles[i], rowParams[i])
 
