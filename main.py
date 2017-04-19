@@ -3,12 +3,10 @@ import json
 import sys
 import os
 import traceback
-import keyboard
 import xlrd
-import random
 import time
-from hashlib import sha1
 from urllib.parse import urlencode
+from urllib.parse import unquote
 from httplib2 import Http
 
 # 毫无用处的全局变量声明，只是为了标识哪些变量在局部作用域使用了
@@ -16,12 +14,10 @@ global rowParams
 global mobiles
 global http
 global logFile
-global result
 
 rowParams = []
 mobiles = []
 http = Http()
-result = []
 
 # 切换目录到脚本运行目录，并读入配置
 os.chdir(os.path.split(os.path.realpath(__file__))[0])
@@ -89,42 +85,32 @@ def check() :
 # 获取调用接口所需要的请求头
 def getHeader() :
     log('Getting HTTP Headers...', level = 5)
-    random.seed()
-    curTime = str(int(time.time()))
-    nonce = ''.join(random.choices('0123456789', k = 32))
-    checkSum = sha1((config['appsecret'] + nonce + curTime).encode()).hexdigest()
     return {
-        'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8',
-        'AppKey': config['appkey'],
-        'Nonce': nonce,
-        'CurTime': curTime,
-        'CheckSum': checkSum
+        'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'
     }
 
 # 发送模板信息的接口调用
 # mobile -> string 电话号码
-# params -> list 参数
+# params -> tuple 参数
 def sendSingle(mobile, params) :
-    log('Sending message to: %s with params %s' % (mobile, ','.join(params)), level = 3)
+    # log(unquote('Sending "%s" to: %s' % (config['template']['content'] % tuple(params) ,mobile)), level = 3)
     header = getHeader()
     body = urlencode({
-        'templateid': config['template']['id'],
-        'mobiles': json.dumps([mobile]),
-        'params': json.dumps(params)
+        'apikey': config['apikey'],
+        'mobile': mobile,
+        'text': config['template']['content'] % tuple(params)
     })
     log(pure = str(header) + '\n' + body + '\n--------', level = 4)
-    log(pure = body, level = 3)
-    # https://api.netease.im/sms/sendtemplate.action
-    resp, body = http.request('https://api.netease.im/sms/sendtemplate.action',
+    log(pure = unquote(body), level = 3)
+    resp, body = http.request('https://sms.yunpian.com/v1/sms/send.json',
         method='POST',
         headers = header,
         body = body
     )
-    result.append([{"mobile": mobile, "params": params}, json.loads(body)])
     log('Request complete, response:', level = 3)
     log(pure = str(resp) + '\n' + str(body) + '\n--------', level = 4)
     log(pure = body.decode(), level = 3)
-    print('%s - %s \t-> %s' % (mobile, ','.join(params), body.decode()))
+    print(unquote('%s - %s \t-> %s' % (mobile, config['template']['content'] % tuple(params)), body.decode()))
 
 
 def send() :

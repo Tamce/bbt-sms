@@ -1,16 +1,14 @@
 {
-    "appkey": "",
-    "appsecret": "",
+    "apikey": "",
     "excel-file": "1.xlsx",
     "log-file": "log.log",
     "template": {
-        "id": 3036121,
-        "name": "面试通过通知",
+        "title": "春招通知",
         "update-at": "2016-12-24 12:54:21",
-        "content": "%s 同学...blablabla，恭喜一审通过，二轮面试时间和地点为 %s，如能参加请回复收到，否则请回复空闲时间段，谢谢。",
+        "content": "【百步梯】%s 同学你好！百步梯技术部已经收到了你的报名信息，请确认你已经加入春招QQ群：，春招任务考核以及相关通知将在群中发布，收到短信请回复姓名，谢谢！",
         "status": "pass"
     },
-    "var-count": 2,
+    "var-count": 1,
     "log": {
         "disabled": false,
         "level": 3
