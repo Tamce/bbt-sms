@@ -66,7 +66,7 @@ def read(f = None) :
     log('File opened.', level = 2)
     for i in range(table.nrows) :
         # 第一列留作电话号码列，从第二列开始作为变量列读入
-        mobiles.append(table.row_values(i)[0])
+        mobiles.append(str(table.row_values(i)[0]))
         rowParams.append(table.row_values(i)[1 : 1 + config['var-count']])
     # 读取完毕，所有信息读入到 rowParams 中
     log('Table analysis complete.', level = 2)
@@ -110,7 +110,7 @@ def sendSingle(mobile, params) :
     log('Request complete, response:', level = 3)
     log(pure = str(resp) + '\n' + str(body) + '\n--------', level = 4)
     log(pure = body.decode(), level = 3)
-    print(unquote('%s - %s \t-> %s' % (mobile, config['template']['content'] % tuple(params)), body.decode()))
+    print(unquote('%s - %s \t-> %s' % (mobile, config['template']['content'] % tuple(params), body.decode())))
 
 
 def send() :
@@ -131,7 +131,7 @@ def clear() :
 def action() :
     print(
     '-----------\n'
-#    'a > 读入文件\n'
+    'a > 读入文件\n'
     'b > 查看列表\n'
     'c > 发出短信\n'
     'd > 清空列表\n'
@@ -142,7 +142,7 @@ def action() :
     choice = input('请选择 > ')
     try:
         {
-#            'a': read,
+            'a': read,
             'b': check,
             'c': send,
             'd': clear,

@@ -1,14 +1,14 @@
 {
     "apikey": "",
-    "excel-file": "1.xlsx",
+    "excel-file": "",
     "log-file": "log.log",
     "template": {
-        "title": "春招通知",
-        "update-at": "2016-12-24 12:54:21",
-        "content": "【百步梯】%s 同学你好！百步梯技术部已经收到了你的报名信息，请确认你已经加入春招QQ群：，春招任务考核以及相关通知将在群中发布，收到短信请回复姓名，谢谢！",
-        "status": "pass"
+        "title": "",
+        "update-at": "",
+        "content": "",
+        "status": ""
     },
-    "var-count": 1,
+    "var-count": 0,
     "log": {
         "disabled": false,
         "level": 3
